@@ -4,14 +4,18 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- master
+- main  
 
-pool: agent1
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  imageName: 'pipelines-javascript-docker'
 
 steps:
-- task: Maven@3
+- task: Docker@2
+  displayName: Build an image
   inputs:
-    mavenPomFile: 'pom.xml' 
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+    repository: $(imageName)
+    command: build
+    Dockerfile: app/Dockerfile
